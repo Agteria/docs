@@ -1,0 +1,21 @@
+---
+title: "Platform decisions and gotchas"
+description: "Why the platform is built this way, and known sharp edges"
+---
+
+<Note>
+  **TODO:** Capture the non-obvious decisions and traps. Seeds to expand:
+</Note>
+
+## Decisions
+
+- **Artifacts in GCS, metadata in Postgres** — raw scientific files (`.pdb`, docking outputs) are large and immutable, so they go to Cloud Storage; only metadata and summaries live in Postgres.
+- **API-first ingestion with manifest finalize** — direct uploads to GCS, then a manifest-based finalize step, rather than proxying files through the API.
+- **Partners see only the current approved run** — old runs are retained internally for traceability but never exposed.
+
+## Gotchas
+
+- **`make bootstrap` must run on the host first** — the Docker stack bind-mounts `src/backend/` and `src/frontend/`, so installs must exist on the host before `make up` works.
+- **Migrations are explicit** — run `make migrate`; `make up` does not apply Alembic upgrades automatically.
+- **Port 5432 conflicts** — set `POSTGRES_HOST_PORT` if it's already in use.
+- {/* Add sharp edges as you hit them */}

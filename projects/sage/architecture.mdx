@@ -1,0 +1,36 @@
+---
+title: "Sage architecture"
+description: "The four-phase ingestion pipeline"
+---
+
+Sage runs four phases in sequence on each invocation.
+
+<Steps>
+  <Step title="Discovery" icon="magnifying-glass">
+    Search PubMed for papers matching configured queries via ESearch. Queries come from the Firestore `query_configs` collection.
+  </Step>
+  <Step title="Retrieval" icon="download">
+    Fetch full metadata and content for discovered papers via EFetch (PubMed API).
+  </Step>
+  <Step title="Deduplication" icon="filter">
+    Filter out papers already in the database — DOI-first, PMID fallback — checked against BigQuery.
+  </Step>
+  <Step title="Storage" icon="database">
+    Store paper content to Cloud Storage and metadata to BigQuery.
+  </Step>
+</Steps>
+
+## Technologies
+
+- Python 3.11
+- GCP: Cloud Run Jobs, BigQuery, Cloud Storage, Firestore, Pub/Sub, Cloud Monitoring
+- PubMed E-utilities API
+
+## Configuration
+
+Search queries live in the Firestore `query_configs` collection. Each query supports a custom PubMed search string, a per-batch result limit (1–1000), pagination for large result sets, and a backfill mode for historical data.
+
+| Env var | Required | Description |
+| --- | --- | --- |
+| `PROJECT_ID` | Yes | GCP project ID |
+| `PUBMED_API_KEY` | No | NCBI API key — raises rate limits from 3 to 10 req/s |

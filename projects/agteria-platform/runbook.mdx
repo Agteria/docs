@@ -1,0 +1,55 @@
+---
+title: "Platform runbook"
+description: "Ingestion and publish flows"
+---
+
+<Note>
+  The manual ingestion flows below are v1, internal, and transitional. Researchers must not publish runs or handle internal review tokens.
+</Note>
+
+## Manual local ingestion flow
+
+<Steps>
+  <Step title="Seed a partner and problem">
+    ```bash
+    cd src/backend && uv run python scripts/seed_dev_data.py \
+      --partner-name "Acme Therapeutics" \
+      --partner-slug acme-therapeutics \
+      --problem-name "Target Alpha" \
+      --problem-slug target-alpha
+    ```
+    Capture the printed `problem_id`.
+  </Step>
+  <Step title="Ingest a completed run folder">
+    Include a `portal-source.json` at the root of the run folder — it is sent to finalize as control metadata and excluded from the partner-visible artifact manifest.
+
+    ```bash
+    cd src/backend && uv run python scripts/ingest_run.py \
+      --api-base-url http://127.0.0.1:8000 \
+      --problem-id <problem-id> \
+      --access-token <workos-access-token> \
+      --source-dir /absolute/path/to/completed-run-folder
+    ```
+  </Step>
+  <Step title="Publish the run">
+    ```bash
+    curl -X POST http://127.0.0.1:8000/portal/runs/<run-id>/publish \
+      -H 'Content-Type: application/json' \
+      -H 'Authorization: Bearer <workos-access-token>' \
+      -d '{}'
+    ```
+  </Step>
+  <Step title="View the partner-facing route">
+    ```text
+    http://127.0.0.1:3000/acme-therapeutics/target-alpha
+    ```
+  </Step>
+</Steps>
+
+## Manual admin research handoff flow
+
+The admin creates a partner/problem/work order, copies the Claude Code handoff, and a researcher ingests a draft run for admin review. The problem detail response includes the Claude Code handoff payload and prompt. If the researcher's agent lacks the repo skill, they copy `.agents/skills/running-agteria-research/` from the repo into their agent skills directory, then run `scripts/ingest_run.py` with the `--research-work-order-id`. Admin reviews the draft run in the internal review UI.
+
+<Note>
+  **TODO:** Document the production deployment target and process (currently the README covers local flows only).
+</Note>

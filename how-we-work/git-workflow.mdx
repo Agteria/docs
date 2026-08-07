@@ -1,0 +1,62 @@
+---
+title: "Git workflow and code review"
+description: "How code goes from branch to merged"
+---
+
+These rules come from the [Engineering Constitution](/how-we-work/overview) (Articles II, III, III-A, V, VI). Some are machine-enforced by GitHub rulesets; others are conventions you're expected to follow.
+
+## Repository model
+
+Development is **trunk-based**. `main` is production. Work happens on short-lived branches that merge into `main` via pull request within days, not weeks. Repositories are either **active** or **archived** — there are no bands, prefixes, or staging repositories.
+
+## Branches
+
+Branch names follow `<type>/<issue>-<short-desc>`:
+
+| Type | Purpose | Example |
+| --- | --- | --- |
+| `feat` | New features | `feat/42-add-oauth-refresh` |
+| `fix` | Bug fixes | `fix/57-null-pointer-on-login` |
+| `hotfix` | Emergency production fixes | `hotfix/63-crash-on-startup` |
+| `docs` | Documentation changes | `docs/70-update-api-reference` |
+| `refactor` | Restructuring, no behavior change | `refactor/81-extract-auth-service` |
+| `chore` | Maintenance, tooling, dependencies | `chore/90-upgrade-node-20` |
+
+- `<issue>` is the GitHub issue number — optional when no issue exists.
+- `<short-desc>` is kebab-case; keep the whole name under ~50 characters.
+- Tool-generated `worktree-*` branches (Claude Code worktree workflows) are permitted.
+
+## Commit messages
+
+All commits follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+Types: `feat`, `fix`, `hotfix`, `docs`, `refactor`, `chore`, `perf`, `test`, `ci`.
+
+1. Commit type should align with branch type — a `feat/` branch carries `feat(...)` commits.
+2. Scope is optional but encouraged (`feat(auth):`, `fix(api):`).
+3. Description is imperative mood, lowercase, no trailing period.
+4. Breaking changes include `BREAKING CHANGE:` in the footer.
+
+## Pull requests
+
+1. Conventional-format title — it may become the squash commit message.
+2. Real description; link the related issue if one exists.
+3. Draft while work is incomplete. Keep scope small and focused.
+
+## Merge gate
+
+On every active repository's default branch, the `protect-main` ruleset enforces:
+
+- Changes land via **pull request** with **1 approving review**. Org admins bypass both requirements (direct pushes included).
+- **No force-pushes. No branch deletion.**
+- **Required status checks** where defined — currently agteria-platform requires `backend`, `frontend`, and `gitleaks`.
+
+Repo settings (converged by `apply.sh`): squash and merge-commit allowed, **rebase-merge disabled**; head branches **auto-delete on merge**.

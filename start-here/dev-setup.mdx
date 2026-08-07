@@ -1,0 +1,109 @@
+---
+title: "Dev environment setup"
+description: "Get your machine ready to work on Agteria code"
+---
+
+This page covers the shared toolchain every Agteria dev installs once. Per-project bootstrap (env files, migrations, seeding) lives in each project's setup page — see [Sage setup](/projects/sage/setup) and [Platform setup](/projects/agteria-platform/setup).
+
+## Prerequisites
+
+- macOS or Linux with admin access to your machine
+- GitHub access via the `@Agteria/engineering` team, with 2FA enabled — see [accounts and access](/start-here/accounts-and-access)
+
+## Install required tools
+
+These tools cover both active projects (Sage and the platform).
+
+<Steps>
+  <Step title="Install core tools">
+    Versions match what the repos pin in their Dockerfiles and manifests. **Python 3.12** covers both projects (it satisfies Sage's `>=3.11`).
+
+    | Tool | Version | Used by |
+    | --- | --- | --- |
+    | Git | — | all |
+    | [GitHub CLI](https://cli.github.com/) (`gh`) | — | auth + cloning private Agteria repos |
+    | Docker (Desktop or another runtime) | — | all — every dev stack runs in Docker |
+    | Python | 3.12 | platform backend (`>=3.12`), Sage (`>=3.11`) |
+    | [uv](https://docs.astral.sh/uv/) | latest | Python dependency management |
+    | Node.js | 22 | platform web apps |
+    | pnpm | 10.20.0 | platform web apps — pinned via corepack |
+    | [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) (`gcloud`) | — | both projects run on GCP |
+
+    <Tabs>
+      <Tab title="macOS (Homebrew)">
+        ```bash
+        brew install git gh python@3.12 uv node@22 google-cloud-sdk
+        brew install --cask docker
+        corepack enable          # activates the pnpm version pinned in package.json
+        ```
+      </Tab>
+      <Tab title="Windows (winget)">
+        winget is built into Windows 10 (1809+) and Windows 11.
+
+        ```powershell
+        winget install -e --id Git.Git
+        winget install -e --id GitHub.cli
+        winget install -e --id Python.Python.3.12
+        winget install -e --id astral-sh.uv
+        winget install -e --id OpenJS.NodeJS.LTS
+        winget install -e --id Google.CloudSDK
+        winget install -e --id Docker.DockerDesktop
+        corepack enable          # activates the pnpm version pinned in package.json
+        ```
+
+        Close and reopen your terminal after installing so `PATH` picks up the new tools.
+      </Tab>
+    </Tabs>
+
+    <Info>
+      Don't install pnpm directly — `corepack enable` picks up the exact version (`pnpm@10.20.0`) from the platform repo's `package.json`, so everyone runs the same one.
+    </Info>
+  </Step>
+  <Step title="Authenticate with Google Cloud">
+    ```bash
+    gcloud auth application-default login
+    ```
+    This provides application default credentials that the projects use locally.
+  </Step>
+  <Step title="Authenticate with GitHub">
+    ```bash
+    gh auth login
+    ```
+
+    Choose GitHub.com and HTTPS. This also configures git's credential helper, so all `git` commands against private Agteria repos work without further setup.
+  </Step>
+  <Step title="Clone the repositories">
+    Clone the repos you'll work on from the [Agteria org](https://github.com/Agteria):
+
+    ```bash
+    gh repo clone Agteria/sage
+    gh repo clone Agteria/agteria-platform
+    ```
+
+    <Note>
+      **TODO:** Confirm which repos a new dev should clone on day one.
+    </Note>
+  </Step>
+  <Step title="Verify your setup">
+    ```bash
+    docker --version
+    python3 --version   # use `python --version` on Windows
+    uv --version
+    pnpm --version
+    gcloud --version
+    ```
+
+    Then follow a project's setup page to bring its stack up end-to-end.
+  </Step>
+</Steps>
+
+## Editor setup
+
+Use whatever editor you like, but it must apply our [code style standard](/how-we-work/conventions#code-style):
+
+- **Python:** lint and format with **ruff**. It reads each repo's `pyproject.toml`, so no per-machine config is needed — just wire ruff into your editor (or run `uv run ruff check` / `uv run ruff format` before committing).
+- **TypeScript:** strict type-checking, same as the `tsc --noEmit` CI gate — any editor with TypeScript language support does this out of the box.
+
+## Next steps
+
+Once your environment works, read the [architecture overview](/architecture/overview) to understand what you'll be working on.

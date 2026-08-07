@@ -1,0 +1,44 @@
+---
+title: "Accounts and access"
+description: "How access works and what a new dev needs on day one"
+---
+
+Access is governed by the [Engineering Constitution](/how-we-work/overview), Articles IV and IX.
+
+## How access works
+
+- **Org owners** administer the organization (currently @rafey).
+- All other engineering access flows through **one team: `@Agteria/engineering`**, which has write permission on every active repository. Direct individual repo grants are prohibited — onboarding and offboarding are a single team-membership change.
+- The default organization member role is **Read**.
+- **Two-factor authentication is required org-wide.** Accounts without 2FA cannot join.
+
+## Onboarding steps
+
+<Steps>
+  <Step title="Enable 2FA">
+    Turn on two-factor authentication on your GitHub account — the org requirement blocks joining without it.
+  </Step>
+  <Step title="Accept the org invite">
+    An owner adds you to `@Agteria/engineering`. That team membership is your entire permission grant.
+  </Step>
+  <Step title="Read the constitution">
+    Read the [Engineering Constitution](/how-we-work/overview) and the pages in How We Work.
+  </Step>
+  <Step title="Open your first pull request">
+    The `protect-main` ruleset — not a supervisor — guarantees an owner reviews it.
+  </Step>
+</Steps>
+
+## Other accounts
+
+@rafey grants access to all services — ask him directly.
+
+| Service | What it's for | Who grants access |
+| --- | --- | --- |
+| GitHub | Code, reviews, CI (via `@Agteria/engineering`) | @rafey |
+| Google Cloud | Sage and platform infrastructure | @rafey |
+| WorkOS | Platform auth (AuthKit) | @rafey |
+
+<Tip>
+  If you got access to something that isn't listed here, add it to this table.
+</Tip>

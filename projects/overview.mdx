@@ -1,0 +1,27 @@
+---
+title: "Projects overview"
+description: "Every project we work on, and how to document a new one"
+---
+
+Each project gets its own section with the same page structure, so you always know where to look.
+
+## Our projects
+
+<Card title="Sage" icon="book-open" href="/projects/sage/overview">
+  PubMed research-paper ingestion pipeline on GCP.
+</Card>
+<Card title="Platform" icon="server" href="/projects/agteria-platform/overview">
+  Backend, workers, and web apps for the partner portal.
+</Card>
+
+## The project template
+
+Every project section contains these pages:
+
+1. **Overview** — what it does, who owns it, links to repo and boards
+2. **Setup** — from clone to running locally
+3. **Architecture** — components, data model, connections to other systems
+4. **Decisions & gotchas** — why it's built this way, known sharp edges
+5. **Runbook** — deploy, monitor, debug (only if it runs in production)
+
+Keep shared practices out of project pages: things like git workflow and deployment conventions live in [How We Work](/how-we-work/git-workflow) — link there and document only what this project does differently.

@@ -1,0 +1,33 @@
+---
+title: "Sage runbook"
+description: "Deploy, schedule, and operate Sage in production"
+---
+
+## Production
+
+Sage runs as a Cloud Run Job:
+
+| Setting | Value |
+| --- | --- |
+| Schedule | Daily at 02:00 UTC via Cloud Scheduler |
+| Resources | 2 CPU, 2Gi memory |
+| Timeout | 6 hours |
+| Max retries | 3 |
+
+Infrastructure is managed with Terraform in `infra/terraform/`.
+
+## CI/CD
+
+A Cloud Build pipeline triggers on pushes to `main`:
+
+1. **Test** — unit tests with pytest
+2. **Lint** — ruff
+3. **Build** — build the Docker image
+4. **Push** — push to Container Registry
+5. **Deploy** — update the Cloud Run Job
+
+Pull requests run tests and lint only.
+
+<Note>
+  **TODO:** Add monitoring/alerting details — where to watch runs, what a failed run looks like, and how to trigger a manual backfill.
+</Note>

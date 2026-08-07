@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Agteria Docs",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -11,24 +11,71 @@
   "navigation": {
     "pages": [
       {
-        "group": "Getting Started",
+        "group": "Start Here",
         "pages": [
           "index",
-          "quickstart"
+          "start-here/dev-setup",
+          "start-here/accounts-and-access",
+          "start-here/glossary"
+        ]
+      },
+      {
+        "group": "Architecture",
+        "pages": [
+          "architecture/overview",
+          "architecture/tech-stack"
+        ]
+      },
+      {
+        "group": "Projects",
+        "pages": [
+          "projects/overview",
+          {
+            "group": "Sage",
+            "pages": [
+              "projects/sage/overview",
+              "projects/sage/setup",
+              "projects/sage/architecture",
+              "projects/sage/runbook",
+              "projects/sage/gotchas"
+            ]
+          },
+          {
+            "group": "Platform",
+            "pages": [
+              "projects/agteria-platform/overview",
+              "projects/agteria-platform/setup",
+              "projects/agteria-platform/architecture",
+              "projects/agteria-platform/runbook",
+              "projects/agteria-platform/gotchas"
+            ]
+          }
+        ]
+      },
+      {
+        "group": "How We Work",
+        "pages": [
+          "how-we-work/overview",
+          "how-we-work/git-workflow",
+          "how-we-work/deployment",
+          "how-we-work/security",
+          "how-we-work/conventions"
+        ]
+      },
+      {
+        "group": "Reference",
+        "pages": [
+          "reference/infrastructure",
+          "reference/third-party-services"
         ]
       }
     ],
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "GitHub",
+          "href": "https://github.com/Agteria",
+          "icon": "github"
         }
       ]
     }
@@ -41,14 +88,9 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:tech@agteria.com"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
-    }
+    ]
   },
   "contextual": {
     "options": [
@@ -64,9 +106,8 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/Agteria",
+      "website": "https://www.agteria.com"
     }
   }
 }

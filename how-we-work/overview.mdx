@@ -1,0 +1,41 @@
+---
+title: "The Engineering Constitution"
+description: "How engineering rules are defined and enforced at Agteria"
+---
+
+Our engineering practices are governed by the **Agteria Engineering Constitution** — a machine-enforced framework for repository management, branching, review, and access control. The pages in this section are the human-readable version; the canonical source is the [Agteria/constitution](https://github.com/Agteria/constitution) repository.
+
+<Info>
+  Amend rules in the constitution repo, not here. When the constitution changes, update these pages to match.
+</Info>
+
+## How rules are enforced
+
+Every rule carries an enforcement tag. A rule is only as real as its mechanism:
+
+| Tag | Meaning |
+| --- | --- |
+| `[ruleset]` | Enforced by a GitHub repository ruleset in `enforcement/rulesets/` |
+| `[org setting]` / `[repo setting]` | Enforced by GitHub settings, converged by `enforcement/apply.sh` |
+| `[CI]` | Enforced by a required GitHub Actions check |
+| `[agent context]` | Mirrored into every Claude Code agent's context via the knowledge repo |
+| `[convention]` | Honor system — agents and humans follow it; nothing blocks violations |
+
+## Convergence with `apply.sh`
+
+`enforcement/apply.sh` converges the org to the constitution. `enforcement/apply.sh --check` reports drift and exits non-zero without writing — run it whenever you doubt the live org matches the words. Anything changed by hand in the GitHub UI is flagged and overwritten on the next apply.
+
+Settings under `apply.sh` control include org 2FA enforcement, the `@Agteria/engineering` team's write access, per-repo `protect-main` rulesets, disabled rebase-merge, auto-delete of merged branches, and Dependabot.
+
+## Amending the constitution
+
+One pull request changes the rule text, its enforcement mechanism (`enforcement/`), and the agent mirror (`agents.md` plus the knowledge repo's CLAUDE.md section) **together**. An org owner approves and merges, then runs `enforcement/apply.sh`. There is no scheduled audit — run `apply.sh --check` whenever it matters.
+
+## Contacts
+
+| Function | Address | Responsibility |
+| --- | --- | --- |
+| Engineering | `tech@agteria.com` | Repository and CI/CD administration |
+| Security | `security@agteria.com` | Vulnerabilities, incidents |
+| Billing | `finance@agteria.com` | GitHub licensing and billing |
+| General IT | `it@agteria.com` | Access and onboarding |

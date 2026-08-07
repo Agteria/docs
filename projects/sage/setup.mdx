@@ -1,0 +1,36 @@
+---
+title: "Sage setup"
+description: "Run Sage locally"
+---
+
+## Prerequisites
+
+- Docker
+- A GCP project with the required APIs enabled
+- A PubMed API key (optional — raises rate limits from 3 to 10 req/s)
+
+## Local development
+
+The dev stack runs through Docker Compose.
+
+<Steps>
+  <Step title="Start the dev container">
+    ```bash
+    docker-compose up dev
+    ```
+  </Step>
+  <Step title="Run unit tests">
+    ```bash
+    docker-compose run test
+    ```
+  </Step>
+  <Step title="Run integration tests">
+    ```bash
+    docker-compose run test-integration
+    ```
+  </Step>
+</Steps>
+
+<Note>
+  **TODO:** Document how to point Sage at a dev GCP project and seed a test query in the Firestore `query_configs` collection, so a new dev can watch a full run end-to-end.
+</Note>

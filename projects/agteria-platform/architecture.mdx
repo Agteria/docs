@@ -1,0 +1,84 @@
+---
+title: "Platform architecture"
+description: "Services, storage, and authentication"
+---
+
+The platform is a monorepo. The Docker Compose dev stack runs PostgreSQL, a Temporal dev server, the FastAPI API, the research-worker, the standard portal Next.js app, and the internal admin Next.js app.
+
+```
+┌──────────────┐     ┌──────────────┐
+│ portal-web   │     │  admin-web   │      Next.js apps
+│ :3000        │     │  :3001       │
+└──────┬───────┘     └──────┬───────┘
+       │                    │
+       └────────┬───────────┘
+                ▼
+         ┌──────────────┐        ┌──────────────────┐
+         │  FastAPI API │───────▶│ PostgreSQL        │  metadata
+         │  :8000       │        └──────────────────┘
+         └──────┬───────┘        ┌──────────────────┐
+                │                │ Google Cloud      │  raw artifacts
+                │───────────────▶│ Storage (.pdb…)   │  (signed uploads)
+                ▼                └──────────────────┘
+         ┌──────────────┐
+         │ Temporal +   │  research-worker
+         │ worker       │
+         └──────────────┘
+```
+
+## Components
+
+| Component | Tech | Local port |
+| --- | --- | --- |
+| API | FastAPI (Python 3.12+, `uv`) | 8000 |
+| Portal web (partner-facing) | Next.js (`@agteria/portal-web`) | 3000 |
+| Admin web (internal) | Next.js (`@agteria/admin-web`) | 3001 |
+| Database | PostgreSQL (Alembic migrations) | 5432 |
+| Workflow engine | Temporal dev server + research-worker | — |
+| Artifact storage | Google Cloud Storage (signed upload URLs) | — |
+
+Inside Docker both web apps call the API at `http://api:8000` via their server-side base URL env vars.
+
+## Authentication
+
+Auth is WorkOS AuthKit across admin-web, portal-web, and the API.
+
+| Env var | Purpose |
+| --- | --- |
+| `WORKOS_API_KEY`, `WORKOS_CLIENT_ID`, `WORKOS_COOKIE_PASSWORD` | AuthKit credentials |
+| `WORKOS_INTERNAL_ORG_ID` | WorkOS org for Agteria staff — backend role scoping |
+| `NEXT_PUBLIC_WORKOS_REDIRECT_URI` | AuthKit callback per app |
+
+## Data model
+
+The core hierarchy is **Partner → Problem → Run**, with artifacts and a review hanging off each run.
+
+```
+Partner                          a customer of Agteria
+  └─ Problem                     a research problem the partner wants solved
+       ├─ Run                    one execution/upload of research results
+       │    ├─ RunArtifact       raw files (.pdb, etc.) in Cloud Storage
+       │    └─ RunPortalReview   internal review gating what the partner sees
+       └─ current abstract       the approved answer surfaced in the portal
+```
+
+Internally each run may be linked to a `ResearchWorkOrder` — the research task record — but that entity isn't partner-facing.
+
+## Data lifecycle
+
+A run moves through two independent status tracks. First the upload lifecycle (`RunStatus`):
+
+```
+created ──▶ uploading ──▶ ready
+                  └──▶ failed / abandoned
+```
+
+Then, once `ready`, the review lifecycle (`RunReviewStatus`) decides what the partner sees:
+
+```
+pending ──▶ published        (partner sees this run's abstract)
+      ├──▶ rejected
+      └──▶ superseded         (a newer published run replaced it)
+```
+
+Only a **published** run surfaces to the partner. Rejected, superseded, and older runs are retained internally but never shown. This is the platform's central invariant: partners see exactly one approved result per problem, and everything else stays behind the internal review boundary.

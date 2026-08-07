@@ -1,0 +1,51 @@
+---
+title: "Tech stack"
+description: "What we build with and why"
+---
+
+Every major technology we use, where it runs, and why we chose it. If you're wondering "why do we use X?" — the answer should be here.
+
+## Languages
+
+| Choice | Where | Why |
+| --- | --- | --- |
+| Python 3.12 | Platform backend, research-worker | Standard for the data/ML-adjacent work; `uv` for dependency management. |
+| Python 3.11 | Sage | Same ecosystem; pinned one minor version behind Platform. |
+| TypeScript | Platform web apps (portal + admin) | Type safety across two Next.js frontends; both enforce strict `tsc --noEmit` in CI. |
+
+## Cloud and compute
+
+| Choice | Where | Why |
+| --- | --- | --- |
+| Google Cloud Platform | Everything | Single cloud for both systems — separate projects (`agteria` for Platform, `sage-480918` for Sage). |
+| Cloud Run (services) | Platform API, portal-web, admin-web | Request-driven, scale-to-zero, no cluster to manage. |
+| Cloud Run Jobs | Sage | Batch work with a run-to-completion model — the right fit for a scheduled pipeline, not a long-lived service. |
+| GKE Autopilot | Platform research-worker | The Temporal worker is a long-lived process holding a persistent connection, which doesn't fit Cloud Run's request model. <Tooltip tip="Confirm this rationale — inferred from the deploy setup">TODO</Tooltip> |
+
+## Data storage
+
+| Choice | Where | Why |
+| --- | --- | --- |
+| Cloud SQL (PostgreSQL) | Platform | Relational metadata: partners, problems, runs, reviews. Alembic migrations. |
+| BigQuery | Sage | Paper metadata and the dedup lookup at ingestion scale. |
+| Firestore | Sage | Stores the `query_configs` that drive which PubMed searches run. |
+| Cloud Storage | Both | Raw artifacts — `.pdb` files and paper content. Platform uses signed upload URLs. |
+
+## Workflow and auth
+
+| Choice | Where | Why |
+| --- | --- | --- |
+| Temporal | Platform research-worker | Durable workflow execution — **so we don't have to build and own retry logic** for long-running research jobs. |
+| WorkOS AuthKit | Platform (API + both web apps) | Managed authentication — **so we don't have to build and own auth**. Handles the internal-vs-partner org split. |
+
+## CI/CD
+
+| Choice | Where | Why |
+| --- | --- | --- |
+| GitHub Actions | Both | CI and deploys live next to the code. |
+| Workload Identity Federation | Both | Keyless deploys to GCP — no long-lived service-account keys to leak or rotate. |
+| Google Secret Manager | Both | Secrets injected at deploy time, never committed. |
+
+<Note>
+  CI checks differ per system today: Sage runs Ruff + pytest; Platform runs backend pytest (no Ruff yet), frontend `tsc --noEmit` + tests, and gitleaks. See [conventions](/how-we-work/conventions) for the standard we're converging on.
+</Note>

@@ -1,0 +1,24 @@
+---
+title: "Secrets and security"
+description: "2FA, secret scanning, dependencies, and the no-secrets rule"
+---
+
+From the [Engineering Constitution](/how-we-work/overview), Article VIII.
+
+## Non-negotiables
+
+- **No credentials, keys, or secrets in code or git history — environment variables only.** `[convention]`
+- **Two-factor authentication is required org-wide.** GitHub enforces this: accounts without 2FA cannot join the org. `[org setting]`
+
+## Automated protections
+
+| Protection | Scope | Mechanism |
+| --- | --- | --- |
+| Dependabot alerts + automated security fixes | Every active repo | `[repo setting]` |
+| Secret scanning (`gitleaks`) | Where CI exists | `[CI]` job |
+
+GitHub-native secret scanning requires Advanced Security, which isn't on the current plan — so `gitleaks` runs in CI instead. On agteria-platform, `gitleaks` is a required status check that must pass before merge.
+
+## Reporting
+
+Report vulnerabilities and incidents to `security@agteria.com`.

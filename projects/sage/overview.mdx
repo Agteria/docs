@@ -1,0 +1,23 @@
+---
+title: "Sage overview"
+description: "PubMed research paper ingestion pipeline"
+---
+
+Sage is a PubMed research-paper ingestion pipeline running on Google Cloud Platform. It discovers papers via configurable search queries, retrieves metadata and full text when available, deduplicates by DOI/PMID, and stores content to Cloud Storage with metadata in BigQuery.
+
+| | |
+| --- | --- |
+| **Repository** | [Agteria/sage](https://github.com/Agteria/sage) |
+| **Language** | Python 3.11 |
+| **Runs as** | Cloud Run Job, scheduled daily |
+| **Owner** | {/* TODO: who owns Sage? */} |
+
+## What it does
+
+Sage runs as a scheduled Cloud Run Job with support for incremental updates and historical backfills. Search queries are configured in Firestore, so adding a new research topic doesn't require a code change.
+
+## Where to go next
+
+- [Setup](/projects/sage/setup) — run it locally
+- [Architecture](/projects/sage/architecture) — the four-phase pipeline
+- [Runbook](/projects/sage/runbook) — schedule, resources, and deployment

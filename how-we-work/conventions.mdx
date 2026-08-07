@@ -1,0 +1,47 @@
+---
+title: "Coding conventions"
+description: "Repository conventions and code style"
+---
+
+Branch and commit conventions live in [git workflow](/how-we-work/git-workflow). This page covers repository lifecycle and code style.
+
+## Archiving repositories
+
+From the [Engineering Constitution](/how-we-work/overview), Article VII. When a repository ceases to be maintained, archive it via GitHub settings and add this notice to its README:
+
+```
+⚠️ Archived — This repository is no longer maintained.
+Superseded by [new-repo-link].
+```
+
+## Code style
+
+These are the standards every Agteria repo follows. Configure them in the repo (`pyproject.toml`, `tsconfig.json`) — never restyle by hand; run the tools.
+
+### Python
+
+- **[ruff](https://docs.astral.sh/ruff/) is the linter and formatter.** Configure it in `pyproject.toml`.
+- **Line length: 100.**
+- **Lint rules: at least `E`, `F`, `I`** (errors, pyflakes, import sorting). Repos may enable more — Sage adds a broader rule set plus mypy.
+- New repos use `ruff format`. Sage currently formats with black, which produces ruff-compatible output; migrate to `ruff format` when convenient rather than urgently.
+
+### TypeScript
+
+- **Strict type-checking via `tsc --noEmit`, enforced in CI.**
+- No ESLint or Prettier requirement for now. If we adopt them, we do it org-wide in one decision, not repo by repo.
+
+### Enforcement
+
+Every repo's CI must run its linter — a standard that CI doesn't check is a suggestion. Current compliance:
+
+| Repo | Complies | Gap |
+| --- | --- | --- |
+| Sage | ✅ Cloud Build runs ruff | — |
+| Platform backend | ⚠️ ruff configured, CI runs pytest only | Add a ruff step to `ci.yml` |
+| Platform frontend | ✅ `frontend` check runs `tsc --noEmit` | — |
+
+See [editor setup](/start-here/dev-setup#editor-setup) for matching editor integration.
+
+<Info>
+  Following the constitution's model, this standard should eventually live as an article in [Agteria/constitution](https://github.com/Agteria/constitution) with a `[CI]` enforcement tag, and this page becomes its mirror.
+</Info>

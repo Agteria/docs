@@ -1,0 +1,60 @@
+---
+title: "Platform setup"
+description: "Run the full platform stack locally"
+---
+
+## Prerequisites
+
+- Python 3.12+
+- `uv`
+- Docker Desktop or another local Docker runtime
+- Google Cloud credentials that can sign upload URLs for the configured bucket
+
+## Bootstrap
+
+<Steps>
+  <Step title="Create your environment file">
+    ```bash
+    cp .env.example .env
+    ```
+    Update it for your bucket, project, and credential path.
+  </Step>
+  <Step title="Install dependencies">
+    ```bash
+    make bootstrap
+    ```
+    Runs `uv sync` in `src/backend/` and `pnpm install` in `src/frontend/`. The Docker dev stack bind-mounts these host directories into the containers, so the installs must exist on the host before `make up` works.
+  </Step>
+  <Step title="Start the stack and apply migrations">
+    ```bash
+    make up
+    make migrate
+    ```
+    Migrations are explicit — run the one-shot `migrate` service whenever the database needs Alembic upgrades.
+  </Step>
+</Steps>
+
+Once up: API at `http://localhost:8000`, partner portal at `http://localhost:3000`, admin at `http://localhost:3001`.
+
+<Tip>
+  If host port `5432` is already in use, set `POSTGRES_HOST_PORT`, e.g. `POSTGRES_HOST_PORT=5433 make up`. Docker-internal services still use `db:5432`.
+</Tip>
+
+## Google Cloud authentication
+
+For local dev, use one of:
+
+- `gcloud auth application-default login` with your own developer identity
+- set `GOOGLE_APPLICATION_CREDENTIALS` to a service-account JSON key with storage signing permissions
+
+## Running services directly on the host
+
+The host workflows remain supported — use `uv` for backend and `pnpm` for frontend.
+
+```bash
+# API
+cd src/backend && uv run uvicorn api.main:app --app-dir services --reload
+
+# Partner portal web app
+cd src/frontend && pnpm --filter @agteria/portal-web dev
+```

@@ -1,16 +1,6 @@
-# Mintlify Starter Kit
+# Agteria Docs
 
-Use the starter kit to get your docs deployed and ready to customize.
-
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
-
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
-
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+Technical documentation for Agteria engineering, built on [Mintlify](https://mintlify.com). Live pages cover onboarding, architecture, projects (Sage, the partner-portal platform), and engineering practices from the [constitution](https://github.com/Agteria/constitution).
 
 ## AI-assisted writing
 

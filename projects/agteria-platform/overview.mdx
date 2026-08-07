@@ -1,0 +1,26 @@
+---
+title: "Platform overview"
+description: "Core services and infrastructure for the Agteria partner portal"
+---
+
+`agteria-platform` is the real backend and supporting infrastructure for a partner-scoped portal where Agteria partners view the current approved results and status for the problems being worked on for them. It is a monorepo containing the API, background workers, and the portal and admin web apps.
+
+| | |
+| --- | --- |
+| **Repository** | [Agteria/agteria-platform](https://github.com/Agteria/agteria-platform) |
+| **Languages** | Python 3.12+ (backend), TypeScript / Next.js (frontend) |
+| **Auth** | WorkOS AuthKit |
+| **Owner** | {/* TODO: who owns the platform? */} |
+
+## Design direction
+
+- Raw scientific artifacts (`.pdb` files, docking outputs) live in Google Cloud Storage.
+- Partner, problem, run, and artifact metadata plus UI-facing summaries live in PostgreSQL.
+- Ingestion is API-first: direct uploads to Cloud Storage with a manifest-based finalize step.
+- Partners only see the **current approved run** for their own problems; old runs are retained internally for traceability.
+
+## Where to go next
+
+- [Setup](/projects/agteria-platform/setup) — run the full stack locally
+- [Architecture](/projects/agteria-platform/architecture) — services, data model, and auth
+- [Runbook](/projects/agteria-platform/runbook) — ingestion and publish flows

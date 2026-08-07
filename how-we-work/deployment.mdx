@@ -1,0 +1,15 @@
+---
+title: "Deployment and environments"
+description: "How code reaches production"
+---
+
+Development is **trunk-based**: `main` is production. Code reaches production by merging a pull request into `main` (see [git workflow](/how-we-work/git-workflow) for the merge gate).
+
+Per-project deployment specifics live in each project's runbook:
+
+- [Sage runbook](/projects/sage/runbook) — Cloud Build → Cloud Run Job, daily schedule
+- [Platform runbook](/projects/agteria-platform/runbook) — ingestion and publish flows
+
+<Note>
+  **TODO:** If there's a shared staging environment or a standard promotion path beyond "merge to main," document it here. Otherwise this page can stay a pointer to the per-project runbooks.
+</Note>

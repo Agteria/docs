@@ -1,0 +1,18 @@
+---
+title: "Sage decisions and gotchas"
+description: "Why Sage is built this way, and known sharp edges"
+---
+
+<Note>
+  **TODO:** Capture the non-obvious decisions and traps. Seeds to expand:
+</Note>
+
+## Decisions
+
+- **Queries in Firestore, not code** — adding a research topic is a config change, not a deploy.
+- **DOI-first deduplication with PMID fallback** — {/* why this order? */}
+
+## Gotchas
+
+- **PubMed rate limits** — without `PUBMED_API_KEY` you're capped at 3 req/s; with it, 10 req/s.
+- {/* Add sharp edges as you hit them: EFetch failures, backfill sizing, BigQuery quotas, etc. */}

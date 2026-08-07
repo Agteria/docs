@@ -1,0 +1,51 @@
+---
+title: "Glossary"
+description: "Agteria and domain terms you'll hear in your first week"
+---
+
+Quick one-line definitions of terms new devs hit early. This is an index, not an encyclopedia — for anything deeper, follow the link to the real page.
+
+<Note>
+  **Verify the science:** the domain definitions below are a first pass. Correct any that don't match how Agteria actually uses the term.
+</Note>
+
+## Domain and science terms
+
+Working here means reading code full of biology and chemistry. These are the terms that show up across the pipelines.
+
+| Term | Meaning |
+| --- | --- |
+| Methane inhibitor / methane-reducing compound | A molecule that reduces the methane cattle produce during digestion — Agteria's core product area. |
+| Feed additive | A substance mixed into animal feed; Agteria's compounds are delivered this way. |
+| Rumen | The stomach compartment in cattle where microbial fermentation produces methane — the environment a compound must survive and act in. |
+| Rumen survival | Whether a compound stays intact and active in the rumen long enough to work; a feasibility check in the discovery pipeline. |
+| Drug target / protein target | The specific protein a candidate molecule is designed to bind and inhibit. |
+| Docking | Computational simulation of how a candidate molecule binds to a target protein, producing a predicted fit score. |
+| `.pdb` file | Protein Data Bank format describing a 3D molecular structure; stored as a raw artifact in the platform. |
+| SMILES | A text notation for a molecule's chemical structure (one string per molecule); the input format for chemical libraries. |
+| Chemical library | A large collection of candidate molecules (as SMILES) screened during molecule design. |
+| In-vitro | Done outside a living organism, e.g. in a test tube. |
+| In-silico | Done by computer simulation. |
+| Assay | A lab test measuring a compound's activity or effect. |
+| Lead / lead selection | A promising candidate compound advanced for further development; selecting leads is a pipeline output. |
+| DOI | Digital Object Identifier — a unique ID for a published paper; the primary deduplication key in [Sage](/projects/sage/overview). |
+| PMID | PubMed ID — a unique ID for a PubMed record; the fallback dedup key in [Sage](/projects/sage/overview). |
+
+## Internal terms and systems
+
+Names that mean nothing outside Agteria.
+
+| Term | Meaning |
+| --- | --- |
+| [Sage](/projects/sage/overview) | Research-paper ingestion pipeline that pulls papers from PubMed into GCP. |
+| [Platform](/projects/agteria-platform/overview) (`agteria-platform`) | Backend, workers, and web apps behind the partner portal. |
+| Partner portal | The partner-facing product where a partner sees the approved results for their problems; served by the platform. |
+| Partner | A customer of Agteria. Top of the platform hierarchy: a partner owns one or more problems. |
+| Problem | A specific research problem belonging to a partner (e.g. an inhibitor for a given target). The unit a partner actually tracks; has runs and an approved "current abstract". |
+| Run | One execution/upload of research results against a problem. Carries artifacts (`.pdb`, files), moves through `created → uploading → ready`, and gets a portal review — only a published run surfaces to the partner. Internally each run may be linked to a *work order*, the research task record, but no one calls it that in conversation. |
+| [Constitution](https://github.com/Agteria/constitution) | The machine-enforced engineering rulebook — see [How We Work](/how-we-work/overview). |
+| `@Agteria/engineering` | The GitHub team that grants write access to every active repo — see [accounts and access](/start-here/accounts-and-access). |
+
+<Note>
+  **TODO — confirm what to include:** the discovery systems Jarvis, Overwatch, Atlas, and Alchemist exist as repos but aren't documented as projects. If devs hear these names, add one-liners. Also still open: what **Argus** is (a validation step referenced across repos with no repo of its own).
+</Note>
